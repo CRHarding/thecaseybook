@@ -1,0 +1,11 @@
+{
+  "name": "caseybook",
+  "version": "1.0.0",
+  "description": "Facebook but made by some guy named casey.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
