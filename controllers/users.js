@@ -1,33 +1,79 @@
-const users = require('../models/users');
+const User = require('../models').User;
+const Post = require('../models').Post;
+
 
 const index = (req, res) => {
-	res.render('users/index.ejs', { users: users });
+	User.findAll().then(users => {
+		res.render('users/index.ejs', { users: users });
+	})
 }
 
-const signup = (req, res) => {
-	res.render('users/signup.ejs');
+const renderSignup = (req, res) => {
+    res.render('users/signup.ejs')
 }
 
 const createUser = (req, res) => {
-	const uuid = new Date().valueOf();
-	req.body.uuid = uuid;
-	users.push(req.body);
-	res.redirect('/users')
+    User.create(req.body)
+    .then(newUser => {
+        res.redirect(`/users/profile/${newUser.id}`);
+    })
+}
+
+const renderLogin = (req, res) => {
+    res.render('users/login.ejs')
+}
+
+const login = (req, res) => {
+    User.findOne({
+        where: {
+            username: req.body.username,
+            password: req.body.password
+        }
+    })
+    .then(foundUser => {
+        res.redirect(`/users/profile/${foundUser.id}`);
+    })
 }
 
 const show = (req, res) => {
-	for (let i = 0; i < users.length; i++) {
-		console.log(users[i].uuid)
-		console.log(req.params.id)
-		if (parseInt(users[i].uuid) === parseInt(req.params.id)) { // 12345 === "12345"
-			res.render('users/profile.ejs', { user: users[i] });
-		}
-	}
+	User.findByPk(req.params.id)
+	.then(user => {
+		res.render('users/profile.ejs', { user })
+	})
 }
+
+const editProfile = (req, res) => {
+    User.update(req.body, {
+        where: {
+            id: req.params.index
+        },
+        returning: true
+    })
+    .then(updatedUser => {
+        res.redirect(`/users/profile/${req.params.index}`);
+    })
+}
+
+const deleteUser = (req, res) => {
+    User.destroy({
+        where: {
+            id: req.params.index
+        }
+    })
+    .then(() => {
+        res.redirect('/users');
+    })
+}
+
+
 
 module.exports = {
 	index,
-	signup,
+	renderSignup,
+	renderLogin,
+	login,
+	deleteUser,
+	editProfile,
 	createUser,
 	show
 }
