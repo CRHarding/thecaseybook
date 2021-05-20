@@ -2,7 +2,7 @@
 <body>
 	<% for (let i = 0; i < users.length; i++) { %>
 		<img src=<%= users[i].img %> alt="User" />
-		<a href="/users/profile/<%=users[i].uuid%>"><%=users[i].username %></a>
+		<a href="/users/profile/<%=users[i].id%>"><%=users[i].username %></a>
 		<p><%= users[i].aboutMe %></p>
 	<% } %>
 </body>

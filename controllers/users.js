@@ -1,7 +1,11 @@
-const users = require('../models/users');
+const users = require('../users');
+const User = require('../models').User;
+const Post = require('../models').Post;
 
 const index = (req, res) => {
-	res.render('users/index.ejs', { users: users });
+	User.findAll().then(users => {
+		res.render('users/index.ejs', { users: users });
+	})
 }
 
 const signup = (req, res) => {
@@ -16,13 +20,16 @@ const createUser = (req, res) => {
 }
 
 const show = (req, res) => {
-	for (let i = 0; i < users.length; i++) {
-		console.log(users[i].uuid)
-		console.log(req.params.id)
-		if (parseInt(users[i].uuid) === parseInt(req.params.id)) { // 12345 === "12345"
-			res.render('users/profile.ejs', { user: users[i] });
-		}
-	}
+	User.findByPk(req.params.id, {
+		include: [{
+			model: Post,
+			attributes: ['id', 'title', 'content']
+		}]
+	})
+	.then(user => {
+		console.log(user)
+		res.render('users/profile.ejs', { user })
+	})
 }
 
 module.exports = {

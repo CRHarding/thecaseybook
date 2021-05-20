@@ -10,5 +10,9 @@
 	<h2>Welcome, <%= user.username %></h2>
 	<img src=<%=user.img%> alt="User" />
 	<p><%= user.aboutMe %></p>
+	<% for (let i = 0; i < user.Posts.length; i++) { %>
+		<p><%= user.Posts[i].title%></p>
+		<p><%= user.Posts[i].content %></p>
+	<% } %>
 </body>
 </html>
