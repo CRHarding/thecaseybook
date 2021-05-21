@@ -1,17 +1,34 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Document</title>
-</head>
+<%- include('../partials/boilerplate') %>
 <body>
 	<h2>Welcome, <%= user.username %></h2>
+	<h3>Join These Teams!</h3>
+	<% if (allTeams.length > 0) { %>
+		<% for (let i = 0; i < allTeams.length; i++) { %>
+			<p><%= allTeams[i].name %> costs: <%= allTeams[i].cost%></p>
+			<form action="/users/addteam" method="POST">
+				<input type="hidden" name="userId" value="<%=user.id%>">
+				<input type="hidden" name="teamId" value="<%=allTeams[i].id%>">
+				<input type="submit" value="ADD TEAM">
+			</form>
+		<% } %>
+	<% } %>
+	<% if (user.Teams.length > 0) { %>
+		<h3>Your Teams!</h3>
+		<% for (let i = 0; i < user.Teams.length; i++) { %>
+			<p><%= user.Teams[i].name %> costs: <%= user.Teams[i].cost %></p>
+		<% } %>
+	<% } %>
 	<img src=<%=user.img%> alt="User" />
 	<p><%= user.aboutMe %></p>
 	<% for (let i = 0; i < user.Posts.length; i++) { %>
 		<p><%= user.Posts[i].title %></p>
+		<p><%= user.Posts[i].content %></p>
 	<% } %>
+	<form action="/users/addpost" method="POST">
+		<input type="hidden" name="userId" value="<%=user.id%>">
+		<input type="text" name="title" placeholder="Title">
+		<input type="text" name="content" placeholder="Post here!">
+		<input type="submit" value="Create the Post!">
+	</form>
 </body>
 </html>
