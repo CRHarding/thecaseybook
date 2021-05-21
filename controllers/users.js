@@ -1,5 +1,6 @@
 const User = require('../models').User;
 const Post = require('../models').Post;
+const Team = require('../models').Team;
 
 const index = (req, res) => {
 	User.findAll().then(users => {
@@ -42,11 +43,23 @@ const show = (req, res) => {
         include: [{
             model: Post,
             attributes: ['id', 'title', 'content']
+        }, {
+            model: Team,
+            attributes: ['name', 'cost']
         }]
     })
 	.then(user => {
-        console.log(user)
-		res.render('users/profile.ejs', { user })
+        const joinedTeams = [];
+        Team.findAll().then(allTeams => {
+            for (let i = 0; i < allTeams.length; i++) {
+                for (let j = 0; j < user.Teams.length; j++) {
+                    if (allTeams[i].name === user.Teams[j].dataValues.name) {
+                        allTeams.splice(i, 1);
+                    }
+                }
+            }
+            res.render('users/profile.ejs', { user, allTeams })
+        })
 	}).catch(err => console.error(err))
 }
 
@@ -73,6 +86,15 @@ const deleteUser = (req, res) => {
     })
 }
 
+const addTeam = (req, res) => {
+    User.findByPk(req.body.userId).then(user => {
+        Team.findByPk(req.body.teamId).then(team => {
+            user.addTeam(team);
+            res.redirect(`/users/profile/${req.body.userId}`);
+        })
+    })
+}
+
 module.exports = {
 	index,
 	renderSignup,
@@ -81,5 +103,6 @@ module.exports = {
 	deleteUser,
 	editProfile,
 	createUser,
-	show
+	show,
+    addTeam
 }

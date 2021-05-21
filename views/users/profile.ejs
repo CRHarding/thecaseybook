@@ -8,6 +8,23 @@
 </head>
 <body>
 	<h2>Welcome, <%= user.username %></h2>
+	<h3>Join These Teams!</h3>
+	<% if (allTeams.length > 0) { %>
+		<% for (let i = 0; i < allTeams.length; i++) { %>
+			<p><%= allTeams[i].name %> costs: <%= allTeams[i].cost%></p>
+			<form action="/users/addteam" method="POST">
+				<input type="hidden" name="userId" value="<%=user.id%>">
+				<input type="hidden" name="teamId" value="<%=allTeams[i].id%>">
+				<input type="submit" value="ADD TEAM">
+			</form>
+		<% } %>
+	<% } %>
+	<% if (user.Teams.length > 0) { %>
+		<h3>Your Teams!</h3>
+		<% for (let i = 0; i < user.Teams.length; i++) { %>
+			<p><%= user.Teams[i].name %> costs: <%= user.Teams[i].cost %></p>
+		<% } %>
+	<% } %>
 	<img src=<%=user.img%> alt="User" />
 	<p><%= user.aboutMe %></p>
 	<% for (let i = 0; i < user.Posts.length; i++) { %>
