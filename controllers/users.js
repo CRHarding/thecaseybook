@@ -95,6 +95,12 @@ const addTeam = (req, res) => {
     })
 }
 
+const addPost = (req, res) => {
+    Post.create(req.body).then(newPost => {
+        res.redirect(`/users/profile/${req.body.userId}`);
+    })
+}
+
 module.exports = {
 	index,
 	renderSignup,
@@ -104,5 +110,6 @@ module.exports = {
 	editProfile,
 	createUser,
 	show,
-    addTeam
+    addTeam,
+    addPost
 }
